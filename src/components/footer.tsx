@@ -7,6 +7,7 @@ const footerLinks = [
   { href: "#o-nas", label: "O nás" },
   { href: "#menu", label: "Menu" },
   { href: "#pivo", label: "Pivo" },
+  { href: "#objednat", label: "Objednať" },
   { href: "#eventy", label: "Eventy" },
   { href: "#kontakt", label: "Kontakt" },
 ];
@@ -79,7 +80,7 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Social */}
+          {/* Social & Order */}
           <div>
             <h4 className="font-semibold text-sm mb-4 text-primary-foreground">
               Sledujte nás
@@ -105,6 +106,29 @@ export function Footer() {
             <p className="text-primary-foreground/40 text-xs mt-4">
               Otváracie hodiny: Po – Ne 11:00 – 23:30
             </p>
+            <div className="mt-4 pt-4 border-t border-primary-foreground/10">
+              <p className="font-semibold text-sm text-primary-foreground mb-2">
+                Objednať rozvoz
+              </p>
+              <div className="flex flex-col gap-1.5">
+                <a
+                  href="https://wolt.com/sk/svk/hlohovec/restaurant/spilka-terasa"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[#6dd5ff] hover:text-[#009FE3] text-xs font-medium transition-colors"
+                >
+                  Wolt →
+                </a>
+                <a
+                  href="https://food.bolt.eu/sk-SK/delivery/hlohovec/spilka-terasa"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[#5ee09a] hover:text-[#34D186] text-xs font-medium transition-colors"
+                >
+                  Bolt Food →
+                </a>
+              </div>
+            </div>
           </div>
         </div>
 

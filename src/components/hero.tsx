@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { ArrowRight, MapPin } from "lucide-react";
+import { ArrowRight, MapPin, Truck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function Hero() {
@@ -106,6 +106,15 @@ export function Hero() {
             onClick={() => handleScrollTo("#kontakt")}
           >
             Rezervovať stôl
+          </Button>
+          <Button
+            size="lg"
+            variant="outline"
+            className="border-[#009FE3]/60 text-[#6dd5ff] hover:bg-[#009FE3]/20 hover:text-white font-semibold text-base px-8 h-12"
+            onClick={() => handleScrollTo("#objednat")}
+          >
+            <Truck className="mr-2 h-4 w-4" />
+            Objednať rozvoz
           </Button>
         </motion.div>
       </div>

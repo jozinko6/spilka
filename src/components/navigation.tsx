@@ -15,6 +15,7 @@ const navLinks = [
   { href: "#o-nas", label: "O nás" },
   { href: "#menu", label: "Menu" },
   { href: "#pivo", label: "Pivo" },
+  { href: "#objednat", label: "Objednať" },
   { href: "#eventy", label: "Eventy" },
   { href: "#kontakt", label: "Kontakt" },
 ];

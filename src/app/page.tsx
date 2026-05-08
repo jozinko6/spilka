@@ -6,6 +6,7 @@ import { About } from "@/components/about";
 import { MenuHighlights } from "@/components/menu-highlights";
 import { BeerSection } from "@/components/beer-section";
 import { DailyMenu } from "@/components/daily-menu";
+import { OrderSection } from "@/components/order-section";
 import { EventsSection } from "@/components/events-section";
 import { Gallery } from "@/components/gallery";
 import { Contact } from "@/components/contact";
@@ -21,6 +22,7 @@ export default function Home() {
         <MenuHighlights />
         <BeerSection />
         <DailyMenu />
+        <OrderSection />
         <EventsSection />
         <Gallery />
         <Contact />
