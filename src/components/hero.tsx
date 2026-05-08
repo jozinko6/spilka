@@ -94,7 +94,7 @@ export function Hero() {
           <Button
             size="lg"
             className="bg-accent text-accent-foreground hover:bg-accent/90 font-bold text-base px-8 h-13 shadow-lg shadow-accent/25"
-            onClick={() => handleScrollTo("#menu")}
+            onClick={() => handleScrollTo("#jedalny-listok")}
           >
             Zobraziť menu
             <ArrowRight className="ml-2 h-5 w-5" />

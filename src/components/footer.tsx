@@ -5,10 +5,10 @@ import { Separator } from "@/components/ui/separator";
 
 const footerLinks = [
   { href: "#o-nas", label: "O nás" },
-  { href: "#menu", label: "Menu" },
+  { href: "#jedalny-listok", label: "Jedálny lístok" },
+  { href: "#ponuka-dna", label: "Ponuka dňa" },
   { href: "#pivo", label: "Pivo" },
   { href: "#objednat", label: "Objednať" },
-  { href: "#eventy", label: "Eventy" },
   { href: "#kontakt", label: "Kontakt" },
 ];
 

@@ -3,7 +3,7 @@
 import { Navigation } from "@/components/navigation";
 import { Hero } from "@/components/hero";
 import { About } from "@/components/about";
-import { MenuHighlights } from "@/components/menu-highlights";
+import { FoodMenu } from "@/components/food-menu";
 import { BeerSection } from "@/components/beer-section";
 import { DailyMenu } from "@/components/daily-menu";
 import { OrderSection } from "@/components/order-section";
@@ -19,7 +19,7 @@ export default function Home() {
       <main className="flex-1">
         <Hero />
         <About />
-        <MenuHighlights />
+        <FoodMenu />
         <BeerSection />
         <DailyMenu />
         <OrderSection />
