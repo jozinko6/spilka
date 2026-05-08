@@ -11,8 +11,8 @@ export function BeerSection() {
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <Image
-          src="/images/beer.png"
-          alt="Pivo Svijany 450"
+          src="/images/spilka-tanks.jpg"
+          alt="Pivné tanky Svijany 450 v SPILKA Terasa"
           fill
           className="object-cover"
           sizes="100vw"

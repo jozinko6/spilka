@@ -18,8 +18,8 @@ export function Hero() {
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <Image
-          src="/images/hero.png"
-          alt="SPILKA Terasa interiér"
+          src="/images/spilka-hero.jpg"
+          alt="SPILKA Terasa – reštaurácia v Hlohovci"
           fill
           className="object-cover"
           priority

@@ -5,34 +5,44 @@ import { SectionWrapper, FadeIn } from "@/components/section-wrapper";
 
 const galleryImages = [
   {
-    src: "/images/food1.png",
+    src: "/images/spilka-interior.jpg",
+    alt: "Interiér reštaurácie SPILKA Terasa",
+    label: "Interiér",
+  },
+  {
+    src: "/images/spilka-dish.jpg",
     alt: "Tradičné slovenské jedlo",
     label: "Tradičné jedlá",
   },
   {
-    src: "/images/food2.png",
-    alt: "Flammkuchen z piecky",
-    label: "Flammkuchen",
+    src: "/images/spilka-food.jpg",
+    alt: "Špeciality z kuchyne SPILKA",
+    label: "Naše špeciality",
   },
   {
-    src: "/images/beer.png",
+    src: "/images/spilka-beer.jpg",
     alt: "Čapované pivo Svijany 450",
     label: "Svijany 450",
   },
   {
-    src: "/images/terrace.png",
+    src: "/images/spilka-tanks.jpg",
+    alt: "Pivné tanky v SPILKA Terasa",
+    label: "Pivné tanky",
+  },
+  {
+    src: "/images/spilka-terrace.jpg",
     alt: "Terasa reštaurácie",
     label: "Terasa",
   },
   {
-    src: "/images/hero.png",
-    alt: "Interiér reštaurácie",
-    label: "Interiér",
-  },
-  {
-    src: "/images/events.png",
+    src: "/images/spilka-event-room.jpg",
     alt: "Spoločenská miestnosť",
     label: "Eventy",
+  },
+  {
+    src: "/images/spilka-hero.jpg",
+    alt: "SPILKA Terasa v Hlohovci",
+    label: "Reštaurácia",
   },
 ];
 

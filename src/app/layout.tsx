@@ -14,6 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://spilkaterasa.sk"),
   title: "SPILKA Terasa | Tradičná kuchyňa s moderným duchom | Hlohovec",
   description:
     "SPILKA Terasa v Hlohovci - tradičná slovenská kuchyňa s moderným duchom. Exkluzívne tankové pivo Svijany 450. Reštaurácia, terasa, spoločenské priestory. Rezervácie: 033/322 22 99",
@@ -42,6 +43,7 @@ export const metadata: Metadata = {
     siteName: "SPILKA Terasa",
     type: "website",
     locale: "sk_SK",
+    images: ["/images/spilka-facebook.jpg"],
   },
   twitter: {
     card: "summary_large_image",

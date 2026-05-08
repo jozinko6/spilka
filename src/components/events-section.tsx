@@ -91,7 +91,7 @@ export function EventsSection() {
             <div>
               <div className="relative rounded-2xl overflow-hidden shadow-xl mb-8">
                 <Image
-                  src="/images/events.png"
+                  src="/images/spilka-event-room.jpg"
                   alt="SPILKA Terasa - spoločenská miestnosť"
                   width={600}
                   height={400}

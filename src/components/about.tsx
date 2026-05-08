@@ -86,8 +86,8 @@ export function About() {
             <div className="relative">
               <div className="relative overflow-hidden rounded-2xl shadow-2xl">
                 <Image
-                  src="/images/terrace.png"
-                  alt="SPILKA Terasa - terasa"
+                  src="/images/spilka-interior.jpg"
+                  alt="SPILKA Terasa - interiér reštaurácie"
                   width={600}
                   height={450}
                   className="w-full h-auto object-cover"

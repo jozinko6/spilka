@@ -16,28 +16,28 @@ const menuCategories = [
     title: "Hlavné jedlá",
     description:
       "Tradičné slovenské špeciality aj medzinárodné jedlá pripravené z tých najkvalitnejších surovín.",
-    image: "/images/food1.png",
+    image: "/images/spilka-dish.jpg",
   },
   {
     icon: Flame,
     title: "Spilka špeciality",
     description:
       "Naše vlastné originálne recepty, ktoré nájdete len v SPILKA reštauráciách.",
-    image: "/images/food1.png",
+    image: "/images/spilka-food.jpg",
   },
   {
     icon: Pizza,
     title: "Flammkuchen",
     description:
       "Chrumkavý tenký koláč z piecky s rôznymi sladkými i slanými náplňami.",
-    image: "/images/food2.png",
+    image: "/images/spilka-dish.jpg",
   },
   {
     icon: Salad,
     title: "Šaláty & Pizza",
     description:
       "Čerstvé šaláty, vegetariánske a vegánske možnosti, chutné pizza špeciality.",
-    image: "/images/food2.png",
+    image: "/images/spilka-food.jpg",
   },
 ];
 
