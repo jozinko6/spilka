@@ -1,9 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,20 +10,86 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
+// ─── Admin ────────────────────────────────────────────────────
+model Admin {
   id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
+  username  String   @unique
+  password  String   // hashed
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-model Post {
+// ─── Menu Categories ─────────────────────────────────────────
+model MenuCategory {
+  id     String     @id @default(cuid())
+  title  String
+  slug   String     @unique
+  icon   String     // lucide icon name
+  order  Int        @default(0)
+  items  MenuItem[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ─── Menu Items (Jedálny lístok) ────────────────────────────
+model MenuItem {
+  id          String       @id @default(cuid())
+  categoryId  String
+  category    MenuCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  name        String
+  description String
+  price       String       // e.g. "9,90"
+  weight      String?      // e.g. "200 g"
+  allergens   String?      // e.g. "1, 3, 7"
+  badge       String?      // e.g. "Bestseller", "Tip šéfkuchára"
+  isNew       Boolean      @default(false)
+  order       Int          @default(0)
+  active      Boolean      @default(true)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+// ─── Daily Menu (Ponuka dňa) ────────────────────────────────
+model DailyMenu {
+  id          String   @id @default(cuid())
+  dayOfWeek   Int      // 1=Monday, 2=Tuesday, ..., 5=Friday
+  soup        String
+  soupAllergens  String?
+  main1       String
+  main1Allergens String?
+  main2       String
+  main2Allergens String?
+  special     String?
+  specialAllergens String?
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([dayOfWeek])
+}
+
+// ─── Events (Akcie) ────────────────────────────────────────
+model Event {
+  id          String   @id @default(cuid())
+  title       String
+  date        String   // ISO date string e.g. "2026-04-27"
+  time        String?  // e.g. "19:00"
+  description String?
+  organizer   String?
+  type        String   // "quiz", "music", "valentine", "other"
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// ─── Gallery Images ────────────────────────────────────────
+model GalleryImage {
   id        String   @id @default(cuid())
-  title     String
-  content   String?
-  published Boolean  @default(false)
-  authorId  String
+  src       String   // URL or path
+  alt       String
+  label     String?
+  order     Int      @default(0)
+  active    Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

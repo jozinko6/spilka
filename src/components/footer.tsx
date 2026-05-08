@@ -138,9 +138,17 @@ export function Footer() {
           <p className="text-primary-foreground/40 text-xs">
             © {new Date().getFullYear()} SPILKA Terasa. Všetky práva vyhradené.
           </p>
-          <p className="text-primary-foreground/30 text-xs">
-            Súčasťou reštauračnej siete SPILKA
-          </p>
+          <div className="flex items-center gap-4">
+            <a
+              href="/admin"
+              className="text-primary-foreground/20 hover:text-primary-foreground/50 text-xs transition-colors"
+            >
+              Admin
+            </a>
+            <p className="text-primary-foreground/30 text-xs">
+              Súčasťou reštauračnej siete SPILKA
+            </p>
+          </div>
         </div>
       </div>
     </footer>

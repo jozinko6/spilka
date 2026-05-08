@@ -72,3 +72,91 @@ Stage Summary:
 - Contact form with backend API validation
 - Lint passes cleanly
 - Dev server compiles successfully (GET / 200)
+
+---
+Task ID: 4 (Admin Panel)
+Agent: Full-stack Developer Subagent
+Task: Build admin panel for SPILKA Terasa restaurant website
+
+Work Log:
+- Verified existing project structure: Prisma schema, API routes, seed data all pre-existing
+- Pushed Prisma schema to database and seeded with initial data
+- Updated layout.tsx to use Sonner toaster instead of default Toaster
+- Updated sonner.tsx to work without next-themes dependency
+- Created src/lib/admin-store.ts — zustand store with persist middleware and hydration tracking
+- Created src/components/admin/admin-login.tsx — login form with amber/gold branding
+- Created src/components/admin/admin-layout.tsx — responsive sidebar + content layout with mobile Sheet menu
+- Created src/components/admin/admin-menu.tsx — menu categories & items management with CRUD dialogs
+- Created src/components/admin/admin-daily-menu.tsx — daily menu per weekday with colored cards
+- Created src/components/admin/admin-events.tsx — events management with table/card view and type badges
+- Created src/components/admin/admin-gallery.tsx — gallery image management with grid layout and hover overlay
+- Created src/app/admin/page.tsx — main admin page with hydration-safe zustand persist integration
+- Fixed lint errors: removed unused eslint-disable directives, replaced useEffect setState with zustand onRehydrateStorage
+
+Stage Summary:
+- Complete admin panel at /admin with 4 sections: Jedálny lístok, Ponuka dňa, Akcie, Galéria
+- Authentication via zustand store with localStorage persistence
+- All CRUD operations work with existing API routes
+- Toast notifications for success/error feedback via Sonner
+- Responsive layout: fixed sidebar on desktop, Sheet/drawer on mobile
+- Amber/gold color scheme matching the main site brand
+- Lint passes cleanly
+- All API endpoints verified working (auth, menu-categories, menu-items, daily-menu, events, gallery)
+
+---
+Task ID: 5
+Agent: Full-stack Developer Subagent
+Task: Update public-facing components to fetch data from API instead of hardcoded data
+
+Work Log:
+- Read all 4 component files to understand current structure and data format
+- Verified API routes exist and return correct data by testing endpoints
+- Read Prisma schema and seed data to understand exact field names and types
+- Updated food-menu.tsx:
+  - Removed hardcoded menuCategories array
+  - Added useState/useEffect for fetching from /api/menu
+  - Created iconMap for mapping string icon names to Lucide components
+  - Added Skeleton loading states for tabs and menu content
+  - Added error state: "Nepodarilo sa načítať jedálny lístok"
+  - Used cat.slug as activeCategory identifier instead of hardcoded IDs
+  - Kept all existing UI/styling intact
+- Updated daily-menu.tsx:
+  - Removed hardcoded weeklyMenu array
+  - Added useState/useEffect for fetching from /api/daily-menu
+  - Created dayNameMap to convert dayOfWeek (1-5) to Slovak day names
+  - Created mapApiToDayMenu function to transform API response to existing DayMenu format
+  - Added Skeleton loading states for day selector and menu content
+  - Added error state: "Nepodarilo sa načítať denné menu"
+  - Added empty state for no daily menu data
+  - Preserved getCurrentDayIndex function behavior
+  - Kept all existing UI/styling intact
+- Updated events-section.tsx:
+  - Kept all existing static event type cards and capacity info
+  - Added useState/useEffect for fetching from /api/events
+  - Added upcoming events section below existing content
+  - Filters events to only show future dates (date >= today)
+  - Sorts events by date ascending
+  - Created eventTypeConfig for type badge styling (quiz=purple, music=blue, valentine=pink, other=gray)
+  - Added Slovak date formatting (formatDateSk) using month names
+  - Shows event title, date, time, organizer, type badge, and description
+  - Added Skeleton loading state for event cards
+  - Added empty state: "Momentálne žiadne naplánované akcie"
+- Updated gallery.tsx:
+  - Removed hardcoded galleryImages array
+  - Added useState/useEffect for fetching from /api/gallery
+  - Added Skeleton loading state with horizontal scroll skeleton
+  - Added error state: "Nepodarilo sa načítať galériu"
+  - Added empty state for no images
+  - Kept all existing horizontal scrollable gallery UI
+- Ran `bun run lint` — passes with no errors
+- Verified all public API endpoints return correct data
+- Verified main page loads (HTTP 200)
+
+Stage Summary:
+- All 4 public-facing components now fetch data from database via API
+- Loading skeletons shown while data fetches
+- Graceful error handling with Slovak error messages
+- Empty states for when no data is available
+- All existing UI/styling preserved — only data source changed
+- Lint passes cleanly
+- All API endpoints verified working (menu, daily-menu, events, gallery)

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Clock,
   Truck,
@@ -12,96 +12,63 @@ import {
 import { SectionWrapper, FadeIn } from "@/components/section-wrapper";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
 
-interface DailyDish {
+interface DailyMenuApiItem {
+  id: string;
+  dayOfWeek: number;
   soup: string;
-  soupAllergens: string;
+  soupAllergens: string | null;
   main1: string;
-  main1Allergens: string;
+  main1Allergens: string | null;
   main2: string;
-  main2Allergens: string;
-  special?: string;
-  specialAllergens?: string;
+  main2Allergens: string | null;
+  special: string | null;
+  specialAllergens: string | null;
+  active: boolean;
 }
 
 interface DayMenu {
   day: string;
   dayShort: string;
-  dishes: DailyDish;
+  dayOfWeek: number;
+  dishes: {
+    soup: string;
+    soupAllergens: string;
+    main1: string;
+    main1Allergens: string;
+    main2: string;
+    main2Allergens: string;
+    special?: string;
+    specialAllergens?: string;
+  };
 }
 
-const weeklyMenu: DayMenu[] = [
-  {
-    day: "Pondelok",
-    dayShort: "Po",
+const dayNameMap: Record<number, { day: string; dayShort: string }> = {
+  1: { day: "Pondelok", dayShort: "Po" },
+  2: { day: "Utorok", dayShort: "Ut" },
+  3: { day: "Streda", dayShort: "St" },
+  4: { day: "Štvrtok", dayShort: "Št" },
+  5: { day: "Piatok", dayShort: "Pi" },
+};
+
+function mapApiToDayMenu(item: DailyMenuApiItem): DayMenu {
+  const dayInfo = dayNameMap[item.dayOfWeek] || { day: `Deň ${item.dayOfWeek}`, dayShort: `${item.dayOfWeek}` };
+  return {
+    day: dayInfo.day,
+    dayShort: dayInfo.dayShort,
+    dayOfWeek: item.dayOfWeek,
     dishes: {
-      soup: "Slepačí vývar s rezancami a mäsom",
-      soupAllergens: "1, 3, 9",
-      main1: "Bravčový rezeň so zemiakovým šalátom",
-      main1Allergens: "1, 3, 7, 10",
-      main2: "Kurací steak na bylinkovom masle s opekanými zemiakmi",
-      main2Allergens: "7",
-      special: "Hovädzí burger s hranolkami a chedar omáčkou",
-      specialAllergens: "1, 3, 7, 10, 11",
+      soup: item.soup,
+      soupAllergens: item.soupAllergens || "",
+      main1: item.main1,
+      main1Allergens: item.main1Allergens || "",
+      main2: item.main2,
+      main2Allergens: item.main2Allergens || "",
+      ...(item.special ? { special: item.special, specialAllergens: item.specialAllergens || "" } : {}),
     },
-  },
-  {
-    day: "Utorok",
-    dayShort: "Ut",
-    dishes: {
-      soup: "Gulášová polievka s chlebom",
-      soupAllergens: "1, 3, 7, 9",
-      main1: "Francúzske zemiaky so šunkou a syrom",
-      main1Allergens: "1, 3, 7, 12",
-      main2: "Kuracie obaľované krídla s varenými zemiakmi a tzatziki",
-      main2Allergens: "1, 3, 7",
-      special: "Flammkuchen slanina, cibuľa",
-      specialAllergens: "1, 3, 7, 12",
-    },
-  },
-  {
-    day: "Streda",
-    dayShort: "St",
-    dishes: {
-      soup: "Krémová polievka z medvedieho cesnaku",
-      soupAllergens: "7, 9",
-      main1: "Pečené kuracie stehno so žemľovou plnkou a dusenou ryžou",
-      main1Allergens: "1, 3, 7",
-      main2: 'Rezňové "stripy" — bravčové s hranolkami',
-      main2Allergens: "1, 3",
-      special: "Grilovaná bravčová panenka so slivkovou omáčkou",
-      specialAllergens: "1, 7",
-    },
-  },
-  {
-    day: "Štvrtok",
-    dayShort: "Št",
-    dishes: {
-      soup: "Tradičná Jókai fazuľová polievka s pivným praclíkom",
-      soupAllergens: "1, 3, 9",
-      main1: "Bravčová panenka s demiglace omáčkou a knedľou",
-      main1Allergens: "1, 3, 7",
-      main2: "Cézar šalát s grilovaným kuracím mäsom",
-      main2Allergens: "1, 3, 7, 12",
-      special: "Flammkuchen paradajky, rukola",
-      specialAllergens: "1, 3, 7",
-    },
-  },
-  {
-    day: "Piatok",
-    dayShort: "Pi",
-    dishes: {
-      soup: "Cesnakový krém so syrovým krutónom",
-      soupAllergens: "1, 3, 7, 9",
-      main1: "Ryba dňa s varenými zemiakmi a tatárskou omáčkou",
-      main1Allergens: "1, 3, 4, 7, 10",
-      main2: "Kurací steak s pečenými baby zemiakmi",
-      main2Allergens: "7",
-      special: "Grilovaný flank steak s chimichurri",
-      specialAllergens: "7",
-    },
-  },
-];
+  };
+}
 
 function getCurrentDayIndex(): number {
   const day = new Date().getDay();
@@ -111,9 +78,56 @@ function getCurrentDayIndex(): number {
   return day - 1;
 }
 
+function DailyMenuSkeleton() {
+  return (
+    <div className="max-w-3xl mx-auto">
+      <div className="bg-card rounded-2xl border border-border/40 shadow-sm overflow-hidden">
+        <div className="bg-accent/10 px-6 py-4 border-b border-border/30">
+          <div className="flex items-center justify-between">
+            <Skeleton className="h-6 w-40 rounded" />
+            <Skeleton className="h-6 w-20 rounded" />
+          </div>
+        </div>
+        <div className="p-5 md:p-6 space-y-4">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="flex items-start gap-3 py-4 border-b border-border/30 last:border-b-0">
+              <Skeleton className="w-8 h-8 rounded-lg flex-shrink-0" />
+              <div className="flex-1 space-y-2">
+                <Skeleton className="h-3 w-20 rounded" />
+                <Skeleton className="h-5 w-3/4 rounded" />
+                <Skeleton className="h-3 w-24 rounded" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function DailyMenu() {
+  const [weeklyMenu, setWeeklyMenu] = useState<DayMenu[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const [todayIndex] = useState(() => getCurrentDayIndex());
   const [activeDay, setActiveDay] = useState(() => getCurrentDayIndex());
+
+  useEffect(() => {
+    fetch("/api/daily-menu")
+      .then((r) => {
+        if (!r.ok) throw new Error("Failed to fetch");
+        return r.json();
+      })
+      .then((data: DailyMenuApiItem[]) => {
+        const mapped = data.map(mapApiToDayMenu);
+        setWeeklyMenu(mapped);
+        setLoading(false);
+      })
+      .catch(() => {
+        setError(true);
+        setLoading(false);
+      });
+  }, []);
 
   const currentMenu = weeklyMenu[activeDay];
 
@@ -191,141 +205,174 @@ export function DailyMenu() {
           </FadeIn>
         </div>
 
-        {/* Day Selector */}
-        <FadeIn delay={0.2}>
-          <div className="flex items-center justify-center gap-2 mb-8">
-            <CalendarDays className="w-5 h-5 text-accent mr-2" />
-            {weeklyMenu.map((day, idx) => (
-              <button
-                key={day.day}
-                onClick={() => setActiveDay(idx)}
-                className={`relative px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-300 ${
-                  activeDay === idx
-                    ? "bg-accent text-accent-foreground shadow-lg shadow-accent/25"
-                    : "bg-card text-muted-foreground hover:bg-accent/10 hover:text-accent border border-border/50"
-                }`}
-              >
-                <span className="hidden sm:inline">{day.day}</span>
-                <span className="sm:hidden">{day.dayShort}</span>
-                {idx === todayIndex && (
-                  <span className="absolute -top-1.5 -right-1.5 w-3 h-3 bg-green-500 rounded-full border-2 border-background" />
-                )}
-              </button>
-            ))}
-          </div>
-        </FadeIn>
-
-        {/* Daily Menu Content */}
-        <FadeIn delay={0.3}>
-          <div className="max-w-3xl mx-auto">
-            <div className="bg-card rounded-2xl border border-border/40 shadow-sm overflow-hidden">
-              {/* Day Header */}
-              <div className="bg-accent/10 px-6 py-4 border-b border-border/30">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-bold text-foreground flex items-center gap-2">
-                    <CalendarDays className="w-5 h-5 text-accent" />
-                    {currentMenu.day}
-                    {activeDay === todayIndex && (
-                      <Badge className="bg-green-100 text-green-700 text-[10px] px-2 py-0 h-5 border-0 ml-1">
-                        Dnes
-                      </Badge>
-                    )}
-                  </h3>
-                  <span className="text-accent font-bold text-lg">7,90 €</span>
-                </div>
-              </div>
-
-              <div className="p-5 md:p-6 space-y-0">
-                {/* Soup */}
-                <div className="flex items-start gap-3 py-4 border-b border-border/30">
-                  <div className="w-8 h-8 rounded-lg bg-orange-100 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <span className="text-sm">🍲</span>
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-xs text-muted-foreground uppercase tracking-wider font-medium mb-1">
-                      Polievka
-                    </p>
-                    <p className="font-semibold text-foreground">
-                      {currentMenu.dishes.soup}
-                    </p>
-                    <p className="text-xs text-muted-foreground/60 mt-0.5">
-                      Alergény: {currentMenu.dishes.soupAllergens}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Main 1 */}
-                <div className="flex items-start gap-3 py-4 border-b border-border/30">
-                  <div className="w-8 h-8 rounded-lg bg-red-100 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <span className="text-sm">🥩</span>
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-xs text-muted-foreground uppercase tracking-wider font-medium mb-1">
-                      Hlavné jedlo 1
-                    </p>
-                    <p className="font-semibold text-foreground">
-                      {currentMenu.dishes.main1}
-                    </p>
-                    <p className="text-xs text-muted-foreground/60 mt-0.5">
-                      Alergény: {currentMenu.dishes.main1Allergens}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Main 2 */}
-                <div className="flex items-start gap-3 py-4 border-b border-border/30">
-                  <div className="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <span className="text-sm">🍗</span>
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-xs text-muted-foreground uppercase tracking-wider font-medium mb-1">
-                      Hlavné jedlo 2
-                    </p>
-                    <p className="font-semibold text-foreground">
-                      {currentMenu.dishes.main2}
-                    </p>
-                    <p className="text-xs text-muted-foreground/60 mt-0.5">
-                      Alergény: {currentMenu.dishes.main2Allergens}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Weekly Special */}
-                {currentMenu.dishes.special && (
-                  <div className="flex items-start gap-3 py-4">
-                    <div className="w-8 h-8 rounded-lg bg-accent/15 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <span className="text-sm">⭐</span>
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <p className="text-xs text-accent uppercase tracking-wider font-medium">
-                          Týždenný špeciál
-                        </p>
-                        <Badge className="bg-accent/15 text-accent text-[9px] px-1.5 py-0 h-4 border-0">
-                          +príplatok
-                        </Badge>
-                      </div>
-                      <p className="font-semibold text-foreground">
-                        {currentMenu.dishes.special}
-                      </p>
-                      <p className="text-xs text-muted-foreground/60 mt-0.5">
-                        Alergény: {currentMenu.dishes.specialAllergens}
-                      </p>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Footer */}
-              <div className="bg-muted/30 px-6 py-3 border-t border-border/30">
-                <p className="text-xs text-muted-foreground/70 text-center">
-                  Cena platí pre obedové menu (polievka + hlavné jedlo).
-                  Týždenný špeciál s príplatkom. Cez Wolt/Bolt od 9,00 €.
-                </p>
-              </div>
+        {loading ? (
+          <>
+            {/* Skeleton Day Selector */}
+            <div className="flex items-center justify-center gap-2 mb-8">
+              <CalendarDays className="w-5 h-5 text-accent mr-2" />
+              {Array.from({ length: 5 }).map((_, i) => (
+                <Skeleton key={i} className="h-10 w-16 rounded-lg" />
+              ))}
             </div>
+            <DailyMenuSkeleton />
+          </>
+        ) : error ? (
+          <div className="text-center py-12">
+            <p className="text-muted-foreground text-lg">Nepodarilo sa načítať denné menu</p>
           </div>
-        </FadeIn>
+        ) : weeklyMenu.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-muted-foreground text-lg">Momentálne nie je dostupné žiadne denné menu</p>
+          </div>
+        ) : (
+          <>
+            {/* Day Selector */}
+            <FadeIn delay={0.2}>
+              <div className="flex items-center justify-center gap-2 mb-8">
+                <CalendarDays className="w-5 h-5 text-accent mr-2" />
+                {weeklyMenu.map((day, idx) => (
+                  <button
+                    key={day.day}
+                    onClick={() => setActiveDay(idx)}
+                    className={`relative px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-300 ${
+                      activeDay === idx
+                        ? "bg-accent text-accent-foreground shadow-lg shadow-accent/25"
+                        : "bg-card text-muted-foreground hover:bg-accent/10 hover:text-accent border border-border/50"
+                    }`}
+                  >
+                    <span className="hidden sm:inline">{day.day}</span>
+                    <span className="sm:hidden">{day.dayShort}</span>
+                    {idx === todayIndex && (
+                      <span className="absolute -top-1.5 -right-1.5 w-3 h-3 bg-green-500 rounded-full border-2 border-background" />
+                    )}
+                  </button>
+                ))}
+              </div>
+            </FadeIn>
+
+            {/* Daily Menu Content */}
+            {currentMenu && (
+              <FadeIn delay={0.3}>
+                <div className="max-w-3xl mx-auto">
+                  <div className="bg-card rounded-2xl border border-border/40 shadow-sm overflow-hidden">
+                    {/* Day Header */}
+                    <div className="bg-accent/10 px-6 py-4 border-b border-border/30">
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-lg font-bold text-foreground flex items-center gap-2">
+                          <CalendarDays className="w-5 h-5 text-accent" />
+                          {currentMenu.day}
+                          {activeDay === todayIndex && (
+                            <Badge className="bg-green-100 text-green-700 text-[10px] px-2 py-0 h-5 border-0 ml-1">
+                              Dnes
+                            </Badge>
+                          )}
+                        </h3>
+                        <span className="text-accent font-bold text-lg">7,90 €</span>
+                      </div>
+                    </div>
+
+                    <div className="p-5 md:p-6 space-y-0">
+                      {/* Soup */}
+                      <div className="flex items-start gap-3 py-4 border-b border-border/30">
+                        <div className="w-8 h-8 rounded-lg bg-orange-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <span className="text-sm">🍲</span>
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-xs text-muted-foreground uppercase tracking-wider font-medium mb-1">
+                            Polievka
+                          </p>
+                          <p className="font-semibold text-foreground">
+                            {currentMenu.dishes.soup}
+                          </p>
+                          {currentMenu.dishes.soupAllergens && (
+                            <p className="text-xs text-muted-foreground/60 mt-0.5">
+                              Alergény: {currentMenu.dishes.soupAllergens}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Main 1 */}
+                      <div className="flex items-start gap-3 py-4 border-b border-border/30">
+                        <div className="w-8 h-8 rounded-lg bg-red-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <span className="text-sm">🥩</span>
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-xs text-muted-foreground uppercase tracking-wider font-medium mb-1">
+                            Hlavné jedlo 1
+                          </p>
+                          <p className="font-semibold text-foreground">
+                            {currentMenu.dishes.main1}
+                          </p>
+                          {currentMenu.dishes.main1Allergens && (
+                            <p className="text-xs text-muted-foreground/60 mt-0.5">
+                              Alergény: {currentMenu.dishes.main1Allergens}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Main 2 */}
+                      <div className="flex items-start gap-3 py-4 border-b border-border/30">
+                        <div className="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <span className="text-sm">🍗</span>
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-xs text-muted-foreground uppercase tracking-wider font-medium mb-1">
+                            Hlavné jedlo 2
+                          </p>
+                          <p className="font-semibold text-foreground">
+                            {currentMenu.dishes.main2}
+                          </p>
+                          {currentMenu.dishes.main2Allergens && (
+                            <p className="text-xs text-muted-foreground/60 mt-0.5">
+                              Alergény: {currentMenu.dishes.main2Allergens}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Weekly Special */}
+                      {currentMenu.dishes.special && (
+                        <div className="flex items-start gap-3 py-4">
+                          <div className="w-8 h-8 rounded-lg bg-accent/15 flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <span className="text-sm">⭐</span>
+                          </div>
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-1">
+                              <p className="text-xs text-accent uppercase tracking-wider font-medium">
+                                Týždenný špeciál
+                              </p>
+                              <Badge className="bg-accent/15 text-accent text-[9px] px-1.5 py-0 h-4 border-0">
+                                +príplatok
+                              </Badge>
+                            </div>
+                            <p className="font-semibold text-foreground">
+                              {currentMenu.dishes.special}
+                            </p>
+                            {currentMenu.dishes.specialAllergens && (
+                              <p className="text-xs text-muted-foreground/60 mt-0.5">
+                                Alergény: {currentMenu.dishes.specialAllergens}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Footer */}
+                    <div className="bg-muted/30 px-6 py-3 border-t border-border/30">
+                      <p className="text-xs text-muted-foreground/70 text-center">
+                        Cena platí pre obedové menu (polievka + hlavné jedlo).
+                        Týždenný špeciál s príplatkom. Cez Wolt/Bolt od 9,00 €.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </FadeIn>
+            )}
+          </>
+        )}
 
         {/* Bottom info */}
         <FadeIn delay={0.4}>
