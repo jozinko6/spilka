@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -40,16 +40,20 @@ export function Navigation() {
     }
   };
 
+  const reserveBtnClass = scrolled
+    ? "font-bold shadow-md bg-accent text-accent-foreground hover:bg-accent/90 shadow-accent/20"
+    : "font-bold shadow-md bg-white text-foreground hover:bg-white/90 shadow-white/20";
+
   return (
     <motion.nav
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={
         scrolled
-          ? "bg-primary/95 backdrop-blur-md shadow-lg"
-          : "bg-transparent"
-      }`}
+          ? "fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-primary/95 backdrop-blur-md shadow-lg"
+          : "fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-transparent"
+      }
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 md:h-20">
@@ -63,16 +67,20 @@ export function Navigation() {
             className="flex items-center gap-2"
           >
             <span
-              className={`text-2xl md:text-3xl font-bold tracking-tight transition-colors duration-300 ${
-                scrolled ? "text-accent" : "text-white"
-              }`}
+              className={
+                scrolled
+                  ? "text-2xl md:text-3xl font-bold tracking-tight transition-colors duration-300 text-accent"
+                  : "text-2xl md:text-3xl font-bold tracking-tight transition-colors duration-300 text-white"
+              }
             >
               SPILKA
             </span>
             <span
-              className={`hidden sm:inline text-sm font-light tracking-widest uppercase transition-colors duration-300 ${
-                scrolled ? "text-primary-foreground/70" : "text-white/70"
-              }`}
+              className={
+                scrolled
+                  ? "hidden sm:inline text-sm font-light tracking-widest uppercase transition-colors duration-300 text-primary-foreground/70"
+                  : "hidden sm:inline text-sm font-light tracking-widest uppercase transition-colors duration-300 text-white/70"
+              }
             >
               Terasa
             </span>
@@ -88,19 +96,16 @@ export function Navigation() {
                   e.preventDefault();
                   handleNavClick(link.href);
                 }}
-                className={`text-sm font-medium tracking-wide transition-colors duration-300 hover:text-accent ${
+                className={
                   scrolled
-                    ? "text-primary-foreground/80"
-                    : "text-white/80"
-                }`}
+                    ? "text-sm font-medium tracking-wide transition-colors duration-300 hover:text-accent text-primary-foreground/80"
+                    : "text-sm font-medium tracking-wide transition-colors duration-300 hover:text-accent text-white/80"
+                }
               >
                 {link.label}
               </a>
             ))}
-            <Button
-              asChild
-              className="bg-accent text-accent-foreground hover:bg-accent/90 font-semibold"
-            >
+            <Button asChild className={reserveBtnClass}>
               <a
                 href="#kontakt"
                 onClick={(e) => {
@@ -154,7 +159,7 @@ export function Navigation() {
                     ))}
                   </div>
                   <Button
-                    className="bg-accent text-accent-foreground hover:bg-accent/90 font-semibold mt-4"
+                    className="bg-white text-foreground hover:bg-white/90 font-bold mt-4 shadow-md"
                     asChild
                   >
                     <a

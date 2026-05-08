@@ -93,27 +93,25 @@ export function Hero() {
         >
           <Button
             size="lg"
-            className="bg-accent text-accent-foreground hover:bg-accent/90 font-semibold text-base px-8 h-12"
+            className="bg-accent text-accent-foreground hover:bg-accent/90 font-bold text-base px-8 h-13 shadow-lg shadow-accent/25"
             onClick={() => handleScrollTo("#menu")}
           >
             Zobraziť menu
-            <ArrowRight className="ml-2 h-4 w-4" />
+            <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
           <Button
             size="lg"
-            variant="outline"
-            className="border-white/30 text-white hover:bg-white/10 hover:text-white font-semibold text-base px-8 h-12"
+            className="bg-white text-foreground hover:bg-white/90 font-bold text-base px-8 h-13 shadow-lg"
             onClick={() => handleScrollTo("#kontakt")}
           >
             Rezervovať stôl
           </Button>
           <Button
             size="lg"
-            variant="outline"
-            className="border-[#009FE3]/60 text-[#6dd5ff] hover:bg-[#009FE3]/20 hover:text-white font-semibold text-base px-8 h-12"
+            className="bg-[#009FE3] text-white hover:bg-[#008aca] font-bold text-base px-8 h-13 shadow-lg shadow-[#009FE3]/25"
             onClick={() => handleScrollTo("#objednat")}
           >
-            <Truck className="mr-2 h-4 w-4" />
+            <Truck className="mr-2 h-5 w-5" />
             Objednať rozvoz
           </Button>
         </motion.div>
