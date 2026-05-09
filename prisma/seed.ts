@@ -6,6 +6,9 @@ async function main() {
   console.log("Seeding database...");
 
   // Clean existing data
+  await prisma.orderItem.deleteMany();
+  await prisma.order.deleteMany();
+  await prisma.table.deleteMany();
   await prisma.galleryImage.deleteMany();
   await prisma.event.deleteMany();
   await prisma.dailyMenu.deleteMany();
@@ -489,6 +492,28 @@ async function main() {
     ],
   });
   console.log("Created gallery images");
+
+  // ─── Restaurant Tables ──────────────────────────────────────
+  await prisma.table.createMany({
+    data: [
+      { number: 1, name: "Pri okne", seats: 2, area: "interior" },
+      { number: 2, name: "Pri okne", seats: 2, area: "interior" },
+      { number: 3, name: "Pri barovom pulte", seats: 4, area: "interior" },
+      { number: 4, seats: 4, area: "interior" },
+      { number: 5, seats: 4, area: "interior" },
+      { number: 6, seats: 6, area: "interior" },
+      { number: 7, seats: 6, area: "interior" },
+      { number: 8, name: "Veľký stôl", seats: 8, area: "interior" },
+      { number: 9, name: "VIP", seats: 6, area: "vip" },
+      { number: 10, name: "VIP", seats: 8, area: "vip" },
+      { number: 11, seats: 4, area: "terrace" },
+      { number: 12, seats: 4, area: "terrace" },
+      { number: 13, seats: 4, area: "terrace" },
+      { number: 14, seats: 6, area: "terrace" },
+      { number: 15, name: "Terasa veľký", seats: 8, area: "terrace" },
+    ],
+  });
+  console.log("Created restaurant tables");
 
   console.log("Seeding complete!");
 }

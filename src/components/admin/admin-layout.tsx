@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
 import {
   UtensilsCrossed,
   CalendarDays,
@@ -14,10 +15,12 @@ import {
   LogOut,
   Menu,
   Soup,
+  Armchair,
+  ClipboardList,
 } from "lucide-react";
 import { toast } from "sonner";
 
-export type AdminSection = "menu" | "daily-menu" | "events" | "gallery";
+export type AdminSection = "menu" | "daily-menu" | "events" | "gallery" | "tables" | "orders";
 
 interface AdminLayoutProps {
   activeSection: AdminSection;
@@ -25,21 +28,25 @@ interface AdminLayoutProps {
   children: React.ReactNode;
 }
 
-const navItems: { id: AdminSection; label: string; icon: React.ElementType }[] = [
+const navItems: { id: AdminSection; label: string; icon: React.ElementType; badge?: number }[] = [
   { id: "menu", label: "Jedálny lístok", icon: Soup },
   { id: "daily-menu", label: "Ponuka dňa", icon: CalendarDays },
   { id: "events", label: "Akcie", icon: PartyPopper },
   { id: "gallery", label: "Galéria", icon: ImageIcon },
+  { id: "tables", label: "Stoly", icon: Armchair },
+  { id: "orders", label: "Objednávky", icon: ClipboardList },
 ];
 
 function SidebarContent({
   activeSection,
   onSectionChange,
   onNavigate,
+  activeOrderCount,
 }: {
   activeSection: AdminSection;
   onSectionChange: (section: AdminSection) => void;
   onNavigate?: () => void;
+  activeOrderCount?: number;
 }) {
   const logout = useAdminStore((s) => s.logout);
 
@@ -85,7 +92,12 @@ function SidebarContent({
                 }`}
               >
                 <Icon className="w-4 h-4 flex-shrink-0" />
-                {item.label}
+                <span className="flex-1 text-left">{item.label}</span>
+                {item.id === "orders" && activeOrderCount !== undefined && activeOrderCount > 0 && (
+                  <Badge className="bg-amber-gold text-white text-[10px] px-1.5 py-0 h-5">
+                    {activeOrderCount}
+                  </Badge>
+                )}
               </button>
             );
           })}
@@ -109,7 +121,7 @@ function SidebarContent({
   );
 }
 
-export function AdminLayout({ activeSection, onSectionChange, children }: AdminLayoutProps) {
+export function AdminLayout({ activeSection, onSectionChange, children, activeOrderCount }: AdminLayoutProps & { activeOrderCount?: number }) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
@@ -119,6 +131,7 @@ export function AdminLayout({ activeSection, onSectionChange, children }: AdminL
         <SidebarContent
           activeSection={activeSection}
           onSectionChange={onSectionChange}
+          activeOrderCount={activeOrderCount}
         />
       </aside>
 
@@ -138,6 +151,7 @@ export function AdminLayout({ activeSection, onSectionChange, children }: AdminL
                 activeSection={activeSection}
                 onSectionChange={onSectionChange}
                 onNavigate={() => setMobileOpen(false)}
+                activeOrderCount={activeOrderCount}
               />
             </SheetContent>
           </Sheet>

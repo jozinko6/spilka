@@ -93,3 +93,44 @@ model GalleryImage {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+// ─── Restaurant Tables ──────────────────────────────────────
+model Table {
+  id          String   @id @default(cuid())
+  number      Int      @unique // table number e.g. 1, 2, 3
+  name        String?  // e.g. "Pri okne", "Terasa"
+  seats       Int      @default(4)
+  area        String?  // e.g. "interior", "terrace", "vip"
+  active      Boolean  @default(true)
+  orders      Order[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// ─── Orders ──────────────────────────────────────────────────
+model Order {
+  id          String     @id @default(cuid())
+  tableId     String
+  table       Table      @relation(fields: [tableId], references: [id], onDelete: Cascade)
+  tableNumber Int        // denormalized for convenience
+  status      String     @default("received") // received, preparing, ready, served, paid, cancelled
+  customerNote String?   // special requests from customer
+  totalItems  Int        @default(0)
+  totalPrice  String     @default("0") // e.g. "29,70"
+  items       OrderItem[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+// ─── Order Items ─────────────────────────────────────────────
+model OrderItem {
+  id        String   @id @default(cuid())
+  orderId   String
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  menuItemId String? // nullable in case menu item is deleted
+  name      String   // denormalized: item name at time of order
+  price     String   // denormalized: item price at time of order
+  quantity  Int      @default(1)
+  note      String?  // e.g. "bez cibuľe"
+  createdAt DateTime @default(now())
+}
